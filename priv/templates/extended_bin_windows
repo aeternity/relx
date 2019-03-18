@@ -143,11 +143,12 @@
 :: Set the ERTS dir from erl
 :set_erts_dir_from_erl
 @for /f "delims=" %%i in ('where erl') do @(
-  set erl=%%i
+  set "erl=%%i"
 )
-@set dir_cmd="%erl%" -sname dummy -boot no_dot_erlang -noshell -eval "io:format(\"~s\", [filename:nativename(code:root_dir())])." -s init stop
-@for /f "delims=" %%i in ('%%dir_cmd%%') do @(
-  set erl_root=%%i
+@set /a _rand_nr=%RANDOM%+100000
+@set dummy_name=dummy-%_rand_nr%
+@for /f "delims=" %%i in ('"%erl%" -sname %dummy_name% -boot no_dot_erlang -noshell -eval "io:format(\"~s\", [filename:nativename(code:root_dir())])." -s init stop') do @(
+  set "erl_root=%%i"
 )
 @set "erts_dir=%erl_root%\erts-%erts_vsn%"
 @set "rootdir=%erl_root%"
@@ -164,12 +165,13 @@
     set sys_config=-config "%possible_sys%"
   )
 )
+@goto :eof
 
 :: Find the vm.args file
 :find_vm_args
-@if not exist "%m_args%" (
-  @if exist "%m_args%.orig" (
-    ren "%m_args%.orig" vm.args
+@if not exist "%vm_args%" (
+  @if exist "%vm_args%.orig" (
+    ren "%vm_args%.orig" vm.args
   )
 )
 @goto :eof
