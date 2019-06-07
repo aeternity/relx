@@ -123,7 +123,6 @@ relx_usage() {
 
 find_erts_dir() {
     __erts_dir="$RELEASE_ROOT_DIR/erts-$ERTS_VSN"
-    DUMMY_NAME="dummy-$(relx_gen_id)"
     if [ -d "$__erts_dir" ]; then
         ERTS_DIR="$__erts_dir";
         ROOTDIR="$RELEASE_ROOT_DIR"
